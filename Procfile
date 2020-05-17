@@ -1,1 +1,1 @@
-web: gunicorn src/zerohunger/zerohunger.wsgi --preload --log-file -
+web: gunicorn --pythonpath="/src/zerohunger/zerohunger" wsgi:application --preload --log-file -
