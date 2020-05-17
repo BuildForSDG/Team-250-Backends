@@ -6,6 +6,9 @@ from rest_framework.response import Response
 from .models import User
 from .serializers import CustomerSerializer, FarmerSerializer, LoginSerializer
 
+class WelcomeView(generics.ListAPIView):
+  def get(self, request):
+    return Response('Welcome To Team-250 Zero Hunger Backend')
 class FarmerRegView(generics.CreateAPIView):
     
   serializer_class = FarmerSerializer
