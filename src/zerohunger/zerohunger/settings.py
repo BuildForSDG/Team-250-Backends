@@ -14,7 +14,7 @@ SECRET_KEY = '9w=1!vbt!!m8&rj2n&0g=sv*#v-$_(4f-ag*l=+*!ahij@@^=#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['zerohunger-backend.herokuapp.com']
 
 
 # Application definition
