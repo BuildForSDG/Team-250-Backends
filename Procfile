@@ -1,1 +1,1 @@
-web: gunicorn src.zerohunger.wsgi --log-file -
+web: gunicorn src.zerohunger.zerohunger.wsgi --log-file -
