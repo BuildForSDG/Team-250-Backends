@@ -1,5 +1,8 @@
-
 import os
+import sys
+
+from datetime import timedelta
+from rest_framework.settings import api_settings
 import django_heroku
 import dj_database_url
 from dotenv import load_dotenv
@@ -66,13 +69,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'zerohunger.wsgi.application'
 AUTH_USER_MODEL = 'accounts.User'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
 DATABASES = {}
-DATABASES['default']  = dj_database_url.config(conn_max_age=500)
 
+DATABASES['default'] = {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
+}
 
 
 # Password validation
@@ -80,16 +84,20 @@ DATABASES['default']  = dj_database_url.config(conn_max_age=500)
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 

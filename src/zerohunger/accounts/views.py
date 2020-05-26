@@ -1,54 +1,56 @@
-from django.shortcuts import get_object_or_404, render
 from knox.models import AuthToken
-from rest_framework import generics, permissions, status, views
+from rest_framework import generics, status
 from rest_framework.response import Response
 
 from .models import User
 from .serializers import CustomerSerializer, FarmerSerializer, LoginSerializer
 
-class WelcomeView(generics.ListAPIView):
-  def get(self, request):
-    return Response('Welcome To Team-250 Zero Hunger Backend')
-class FarmerRegView(generics.CreateAPIView):
-    
-  serializer_class = FarmerSerializer
 
-  def post(self, request):
+class WelcomeView(generics.ListAPIView):
+    def get(self, request):
+        return Response('Welcome To Team-250 Zero Hunger Backend')
+
+
+class FarmerRegView(generics.CreateAPIView):
+
+    serializer_class = FarmerSerializer
+
+    def post(self, request):
         """
-        create:
-          Create a new Farmer.
-        """  
+        post:
+        Create a new Farmer.
+        """
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        token =  AuthToken.objects.create(user)[1]
+        token = AuthToken.objects.create(user)[1]
         return Response({
-          "message": "Farmer created succesfully",
-          'farmer': serializer.data,
-          'token': token
-          }, status=status.HTTP_201_CREATED)
+            "message": "Farmer created succesfully",
+            'farmer': serializer.data,
+            'token': token
+        }, status=status.HTTP_201_CREATED)
 
 
 class CustomerRegView(generics.CreateAPIView):
-  serializer_class = CustomerSerializer
+    serializer_class = CustomerSerializer
 
-  def post(self, request):
+    def post(self, request):
         """
-        create:
-          Create a new Customer.
-        """  
+        post:
+        Create a new Customer.
+        """
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        token =  AuthToken.objects.create(user)[1]
+        token = AuthToken.objects.create(user)[1]
         return Response({
-          "message": "customer created succesfully",
-          'customer': serializer.data,
-          'token': token
-          }, status=status.HTTP_201_CREATED)
+            "message": "customer created succesfully",
+            'customer': serializer.data,
+            'token': token
+        }, status=status.HTTP_201_CREATED)
+
 
 class UserLogin(generics.CreateAPIView):
-  
 
     serializer_class = LoginSerializer
 
@@ -58,9 +60,9 @@ class UserLogin(generics.CreateAPIView):
         email = serializer.validated_data['email']
         user = User.objects.get(email=email)
 
-        token =  AuthToken.objects.create(user)[1]
+        token = AuthToken.objects.create(user)[1]
         return Response({
-          "message": "Login succesfully",
-          'user': serializer.data,
-          'token': token
-          }, status=status.HTTP_201_CREATED)
+            "message": "Login succesfully",
+            'user': serializer.data,
+            'token': token
+        }, status=status.HTTP_201_CREATED)
