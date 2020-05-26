@@ -1,17 +1,12 @@
 import os
-import sys
 
-from datetime import timedelta
-from rest_framework.settings import api_settings
 import django_heroku
-import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-SECRET_KEY = '9w=1!vbt!!m8&rj2n&0g=sv*#v-$_(4f-ag*l=+*!ahij@@^=#'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = True
 
@@ -85,7 +80,8 @@ DATABASES['default'] = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME':
-        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "django.contrib.auth.password_validation."
+        "UserAttributeSimilarityValidator",
     },
     {
         'NAME':

@@ -1,14 +1,18 @@
 from knox.models import AuthToken
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 from .models import User
 from .serializers import CustomerSerializer, FarmerSerializer, LoginSerializer
 
 
-class WelcomeView(generics.ListAPIView):
-    def get(self, request):
+@api_view(['GET'])
+def welcome(request):
+    if request.method == 'GET':
         return Response('Welcome To Team-250 Zero Hunger Backend')
+
+    return Response('method not supported')
 
 
 class FarmerRegView(generics.CreateAPIView):
