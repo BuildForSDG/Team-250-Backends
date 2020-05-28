@@ -109,3 +109,13 @@ class ProductTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         count = Produce.objects.count()
         self.assertEqual(count, 1)
+    # test menu details retrieve by id valid user
+
+    def test_product_details_retrieve_valid(self):
+        response = self.client.get(reverse('detail-product', args=['1']))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.produce1.name, response.data['product']['name'])
+
+    def test_product_details_retrieve_invalid(self):
+        response = self.client.get(reverse('detail-product', args=['2']))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

@@ -1,6 +1,5 @@
 from django.db import models
 from accounts.models import User
-from cloudinary.models import CloudinaryField
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -24,7 +23,7 @@ class Produce(models.Model):
     quantity = models.IntegerField(
         _("Quantity Available"),
         help_text="Quantity of Product Available")
-    product_img = CloudinaryField('product_image')
+    product_img = models.CharField(_("Product Image"), max_length=100)
     create_date = models.DateTimeField(
         _("Date of Creation"), auto_now_add=True)
 

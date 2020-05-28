@@ -9,8 +9,7 @@ class ProduceListSerializer(serializers.ModelSerializer):
         options={
             'crop': 'thumb',
             'width': 200,
-            'height': 200,
-            'folder': 'produces'
+            'height': 200
         }
     )
     farmerId = FarmerSerializer(read_only=True)

@@ -1,6 +1,8 @@
-from rest_framework import generics, status, permissions
-from rest_framework.parsers import MultiPartParser, JSONParser
+from django.shortcuts import get_object_or_404
+from rest_framework import generics, permissions, status
+from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
+
 import cloudinary.uploader
 
 from .models import Produce
@@ -37,10 +39,11 @@ class AddProductAPI(generics.CreateAPIView):
         file = request.data.get('product_img')
         try:
             upload_data = cloudinary.uploader.upload(file)
-        except:  # noqa: E722
+        except cloudinary.exceptions.Error as c:
             return Response({
                 'message': 'error uploading to cloudinary, '
-                'Ensure image is attached to the request'
+                'Ensure image is attached to the request',
+                'error': str(c)
             }, status=status.HTTP_400_BAD_REQUEST)
 
         product_img = upload_data['url']
@@ -63,3 +66,16 @@ class AddProductAPI(generics.CreateAPIView):
             'message': 'success',
             'product': ProduceListSerializer(product).data
         }, status=status.HTTP_201_CREATED)
+
+
+class ProduceDetailsAPI(generics.RetrieveAPIView):
+    queryset = Produce.objects.all()
+    serializer_class = ProduceListSerializer
+
+    def get(self, request, id):
+        product = get_object_or_404(Produce, id=id)
+
+        return Response({
+            'message': 'success',
+            'product': ProduceListSerializer(product).data
+        })
