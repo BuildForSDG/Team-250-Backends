@@ -2,6 +2,9 @@
 **/**/.pyc
 .DS_Store
 
+**/**/.env
+db.* 
+
 # DIRECTORIES
 **/**/__pycache__
 .vscode/
