@@ -138,5 +138,5 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATIC_URL = '/static/'
 CORS_ORIGIN_ALLOW_ALL = True
 
-django_heroku.settings(locals())
+django_heroku.settings(locals(), test_runner=False)
 del DATABASES['default']['OPTIONS']['sslmode']
