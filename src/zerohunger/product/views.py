@@ -118,3 +118,8 @@ class ProduceEditDelete(generics.RetrieveUpdateDestroyAPIView):
         return Response({
             'message': 'error',
             'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        product = self.get_object(id)
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

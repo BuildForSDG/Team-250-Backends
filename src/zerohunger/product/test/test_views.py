@@ -254,3 +254,68 @@ class ProductTestCase(APITestCase):
 
         response = self.client.put(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_product_detail_delete_by_permitted_owner(self):
+        url = reverse('product-edit-delete', args=['2'])
+        Produce.objects.create(
+            name='Nigerian Beans pp',
+            price=10000,
+            farmer_id=self.user,
+            description='Best Rice in the universe',
+            quantity=20,
+            product_img='https://res.cloudinary.com/kayode/image/upload/'
+            'v1589264758/unhns7pnrpcjfkifdfgd.jpg'
+        )
+
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_product_detail_delete_by_unpermitted_owner(self):
+        url = reverse('product-edit-delete', args=['1'])
+
+        user = Farmer.objects.create_farmer(
+            email="user2@gmail.com",
+            phone_number="08075985865",
+            business_name="User",
+            password="Some_very_strong_password"
+        )
+
+        token = AuthToken.objects.create(user)[1]
+        self.user = user
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
+
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_produce_detail_delete_by_invalid(self):
+        url = reverse('product-edit-delete', args=['2'])
+        Produce.objects.create(
+            name='Nigerian Beans pp',
+            price=10000,
+            farmer_id=self.user,
+            description='Best Rice in the universe',
+            quantity=20,
+            product_img='https://res.cloudinary.com/kayode/image/upload/'
+            'v1589264758/unhns7pnrpcjfkifdfgd.jpg'
+        )
+        self.client.force_authenticate(user=None)
+
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_produce_detail_delete_by_customer(self):
+        url = reverse('product-edit-delete', args=['1'])
+        user = Customer.objects.create_customer(
+            email="user2@gmail.com",
+            phone_number="08075985865",
+            first_name="User",
+            last_name="Two",
+            password="Some_very_strong_password"
+        )
+
+        token = AuthToken.objects.create(user)[1]
+        self.user = user
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
+
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
