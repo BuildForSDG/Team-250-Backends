@@ -12,7 +12,7 @@ install:
 
 script:
     - cd src/zerohunger python manage.py test 
-    - cd src/zerohunger coverage run --source=product,accounts manage.py test product accounts
+    - coverage run --source=product,accounts manage.py test product accounts
 
 after_success: coveralls
 
