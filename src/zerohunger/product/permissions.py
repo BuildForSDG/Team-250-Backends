@@ -11,3 +11,12 @@ class IsFarmerOrReadOnly(BasePermission):
         if user.isFarmer:
             return True
         return False
+
+
+class IsOwnerOrReadOnly(BasePermission):
+    message = 'You must be the owner to perform this operation'
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in SAFE_METHODS:
+            return True
+        return obj.farmer_id.email == request.user.email

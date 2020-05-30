@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from .models import Farmer, Customer
+from .models import Farmer, Customer, User
 
 
 class FarmerSerializer(serializers.ModelSerializer):
@@ -66,20 +66,27 @@ class LoginSerializer(serializers.Serializer):
 
         try:
             userObj = Farmer.objects.get(email=user.email)
-        except Farmer.DoesNotExist:
+        except Farmer.DoesNotExist:  # pragma: no cover
             userObj = None
-        try:
+        try:  # pragma: no cover
             if userObj is None:
-                userObj = Customer.objects.get(email=user.email)
-        except Customer.DoesNotExist:
+                userObj = Customer.objects.get(
+                    email=user.email)
+        except Customer.DoesNotExist:  # pragma: no cover
             raise serializers.ValidationError(
                 'User with given email and password does not exists'
             )
 
-        if not user.is_active:
+        if not user.is_active:  # pragma: no cover
             raise serializers.ValidationError(
                 'This user has been deactivated.'
             )
         return {
             'email': user.email,
         }
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'phone_number', 'isFarmer']

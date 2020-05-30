@@ -12,8 +12,6 @@ def welcome(request):
     if request.method == 'GET':
         return Response('Welcome To Team-250 Zero Hunger Backend')
 
-    return Response('method not supported')
-
 
 class FarmerRegView(generics.CreateAPIView):
 

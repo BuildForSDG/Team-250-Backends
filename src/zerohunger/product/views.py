@@ -6,8 +6,8 @@ from rest_framework.response import Response
 import cloudinary.uploader
 
 from .models import Produce
-from .permissions import IsFarmerOrReadOnly
-from .serializers import ProduceListSerializer
+from .permissions import IsFarmerOrReadOnly, IsOwnerOrReadOnly
+from .serializers import ProduceListSerializer, ProduceEditSerializer
 
 
 class ProduceAPI(generics.ListAPIView):
@@ -79,3 +79,42 @@ class ProduceDetailsAPI(generics.RetrieveAPIView):
             'message': 'success',
             'product': ProduceListSerializer(product).data
         })
+
+
+class ProduceEditDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Produce.objects.all()
+    serializer_class = ProduceListSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsFarmerOrReadOnly,
+        IsOwnerOrReadOnly
+    ]
+
+    def get_object(self, id):
+        id = int(id)
+        obj = get_object_or_404(Produce, id=id)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def get(self, request, id):
+        product = self.get_object(id)
+
+        return Response({
+            'message': 'success',
+            'product': ProduceListSerializer(product).data
+        })
+
+    def put(self, request, id):
+        produce = self.get_object(id)
+
+        data = request.data
+        serializer = ProduceEditSerializer(produce, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                'message': 'success',
+                'product': serializer.data
+            })
+        return Response({
+            'message': 'error',
+            'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

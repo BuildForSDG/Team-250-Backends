@@ -58,6 +58,19 @@ class ProductTestCase(APITestCase):
         self.assertEqual(response.data
                          ['product']['name'], data['name'])
 
+    def test_produce_add_not_safe(self):
+        data = {
+            "name": "aaaaaaaaaaaaaa",
+            "price": 2000,
+            "description": "aaaaaaaaaaaaaa",
+            "quantity": 20,
+            "product_img": self.file_path
+        }
+
+        response = self.client.put(self.add_url, data)
+        self.assertEqual(response.status_code,
+                         status.HTTP_405_METHOD_NOT_ALLOWED)
+
     def test_produce_add_fail(self):
         data = {
             "name": "aaaaaaaaaaaaaa",
@@ -96,6 +109,21 @@ class ProductTestCase(APITestCase):
         count = Produce.objects.count()
         self.assertEqual(count, 1)
 
+    def test_produce_add_unpermitted_safe_permissions(self):
+        user = Customer.objects.create_customer(
+            email="user2@gmail.com",
+            phone_number="08075985865",
+            first_name="User",
+            last_name="Two",
+            password="Some_very_strong_password"
+        )
+
+        token = AuthToken.objects.create(user)[1]
+        self.user = user
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
+        response = self.client.options(self.add_url)
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
+
     def test_produce_create_unauthorize_user(self):
         data = {
             "name": "aaaaaaaaaaaaaa",
@@ -119,3 +147,110 @@ class ProductTestCase(APITestCase):
     def test_product_details_retrieve_invalid(self):
         response = self.client.get(reverse('detail-product', args=['2']))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_product_edit_permitted_owner(self):
+        url = reverse('product-edit-delete', args=['2'])
+        Produce.objects.create(
+            name='Nigerian Beans',
+            price=10000,
+            farmer_id=self.user,
+            description='Best Rice in the universe',
+            quantity=20,
+            product_img='https://res.cloudinary.com/kayode/image/upload/'
+            'v1589264758/unhns7pnrpcjfkifdfgd.jpg'
+        )
+
+        data = {
+            "name": "product 2",
+            "price": 2000,
+            "description": "product 2 description"
+        }
+
+        response = self.client.put(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data
+                         ['product']['name'], data['name'])
+
+    def test_product_edit_unpermitted_owner(self):
+        user = Farmer.objects.create_farmer(
+            email="user2@gmail.com",
+            phone_number="08075985865",
+            business_name="User",
+            password="Some_very_strong_password"
+        )
+        token = AuthToken.objects.create(user)[1]
+        self.user = user
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
+
+        url = reverse('product-edit-delete', args=['1'])
+        data = {
+            "name": "product 2",
+            "price": 2000,
+            "description": "product 2 description"
+        }
+
+        response = self.client.put(url, data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_product_detail_update_by_customer_user(self):
+
+        user = Customer.objects.create_customer(
+            email="user3@gmail.com",
+            phone_number="08075985865",
+            first_name="User",
+            last_name="Two",
+            password="Some_very_strong_password"
+        )
+
+        token = AuthToken.objects.create(user)[1]
+        self.user = user
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
+
+        url = reverse('product-edit-delete', args=['1'])
+        data = {
+            "name": "Amala Delicious",
+            "description": "Amala Sumptuos",
+            "quantity": 2
+        }
+
+        response = self.client.put(url, data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_product_details_retrieve_update_valid(self):
+        user = Customer.objects.create_customer(
+            email="user3@gmail.com",
+            phone_number="08075985865",
+            first_name="User",
+            last_name="Two",
+            password="Some_very_strong_password"
+        )
+
+        token = AuthToken.objects.create(user)[1]
+        self.user = user
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
+
+        url = reverse('product-edit-delete', args=['1'])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.produce1.name, response.data['product']['name'])
+
+    def test_product_details_update_invalid(self):
+        url = reverse('product-edit-delete', args=['2'])
+        Produce.objects.create(
+            name='Nigerian Beans pp',
+            price=10000,
+            farmer_id=self.user,
+            description='Best Rice in the universe',
+            quantity=20,
+            product_img='https://res.cloudinary.com/kayode/image/upload/'
+            'v1589264758/unhns7pnrpcjfkifdfgd.jpg'
+        )
+
+        data = {
+            "name": "",
+            "price": 2000,
+            "description": "product 2 description"
+        }
+
+        response = self.client.put(url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

@@ -13,7 +13,8 @@ class FarmerManager(BaseUserManager):
         password=None
     ):
         if email is None:
-            raise TypeError('Users must have an email address.')
+            raise TypeError(
+                'Users must have an email address.')  # pragma: no cover
         farmer = Farmer(
             email=self.normalize_email(email),
             phone_number=phone_number,
@@ -35,7 +36,8 @@ class CustomerManager(BaseUserManager):
         password=None
     ):
         if email is None:
-            raise TypeError('Users must have an email address.')
+            raise TypeError(
+                'Users must have an email address.')  # pragma: no cover
         customer = Customer(
             email=self.normalize_email(email),
             phone_number=phone_number,
