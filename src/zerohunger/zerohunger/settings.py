@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'knox',
     'accounts',
     'corsheaders',
-    'product'
+    'product',
+    'orders'
 ]
 
 

@@ -31,3 +31,11 @@ class ProduceEditSerializer(serializers.ModelSerializer):
         model = Produce
         fields = ['farmer_id', 'name', 'price',
                   'product_img', 'description', 'quantity']
+
+
+class ProduceSerializer(serializers.ModelSerializer):
+    # farmer_id = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Produce
+        fields = ['name', 'price']
