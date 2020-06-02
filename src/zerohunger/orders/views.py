@@ -1,10 +1,12 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
-from .models import Orders, ItemsOrdered
-from .serializers import OrderSerializer
-from product.models import Produce
 
-# Create your views here.
+from .models import Orders, ItemsOrdered
+from .permissions import IsOwner
+from .serializers import OrderSerializer
+
+from product.models import Produce
 
 
 class OrderAPI(generics.ListCreateAPIView):
@@ -41,3 +43,26 @@ class OrderAPI(generics.ListCreateAPIView):
             "message": "success",
             "order": OrderSerializer(order).data
         }, status=status.HTTP_201_CREATED)
+
+
+class OrderDetailsAPI(generics.RetrieveAPIView):
+    queryset = Orders
+    serializer_class = OrderSerializer
+
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsOwner
+    ]
+
+    def get_object(self, id):
+        id = int(id)
+        obj = get_object_or_404(Orders, id=id)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def get(self, request, orderId):
+        order = self.get_object(orderId)
+        return Response({
+            'message': 'success',
+            'order': OrderSerializer(order).data
+        })
