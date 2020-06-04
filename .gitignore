@@ -3,10 +3,12 @@
 .DS_Store
 
 **/**/.env
-db.* 
+db.*
+*.coverage
 
 # DIRECTORIES
 **/**/__pycache__
 .vscode/
 .pytest_cache
 src.egg-info
+htmlcov

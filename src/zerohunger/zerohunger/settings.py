@@ -1,5 +1,7 @@
 import os
 
+import cloudinary
+import dj_database_url
 import django_heroku
 from dotenv import load_dotenv
 
@@ -23,13 +25,33 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'cloudinary',
     'knox',
     'accounts',
-    'corsheaders'
+    'corsheaders',
+    'product',
+    'orders'
 ]
 
+
+cloudinary.config(
+    cloud_name=os.getenv('CLOUD_NAME'),
+    api_key=os.getenv('API_KEY'),
+    api_secret=os.getenv('API_SECRET'),
+    secure=True
+)
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'knox.auth.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FormParser'
+    ],
 }
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -66,13 +88,11 @@ AUTH_USER_MODEL = 'accounts.User'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+
 DATABASES = {}
 
-DATABASES['default'] = {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
-}
-
+DATABASES['default'] = dj_database_url.config(
+    default=os.getenv('DATABASE_URL'))
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -119,4 +139,5 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATIC_URL = '/static/'
 CORS_ORIGIN_ALLOW_ALL = True
 
-django_heroku.settings(locals())
+django_heroku.settings(locals(), test_runner=False)
+del DATABASES['default']['OPTIONS']['sslmode']

@@ -1,7 +1,7 @@
-from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.models import BaseUserManager  # pragma: no cover
 
 
-class UserManager(BaseUserManager):
+class UserManager(BaseUserManager):  # pragma: no cover
 
     use_in_migrations = True
 

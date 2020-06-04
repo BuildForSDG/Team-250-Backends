@@ -1,0 +1,19 @@
+language: python
+
+python:
+    - "3.8"
+
+env:
+    - SECRET_KEY='TEST'
+
+install:
+    - pip install -r requirements.txt
+    - pip install coveralls
+
+script:
+    - coverage run --source=product,accounts,orders src/zerohunger/manage.py test product accounts orders
+
+after_success: coveralls
+
+
+
