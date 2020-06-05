@@ -18,6 +18,7 @@ class FarmerSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'email',
+            'location',
             'phone_number',
             'business_name',
             'password'
@@ -39,6 +40,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'email',
+            'location',
             'phone_number',
             'first_name',
             'last_name',
@@ -66,8 +68,8 @@ class LoginSerializer(serializers.Serializer):
 
         try:
             userObj = Farmer.objects.get(email=user.email)
-        except Farmer.DoesNotExist:  # pragma: no cover
-            userObj = None
+        except Farmer.DoesNotExist:  # pragma: no cover 
+            userObj = None 
         try:  # pragma: no cover
             if userObj is None:
                 userObj = Customer.objects.get(
@@ -89,4 +91,4 @@ class LoginSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'phone_number', 'isFarmer']
+        fields = ['id', 'email', 'phone_number', 'location', 'isFarmer']

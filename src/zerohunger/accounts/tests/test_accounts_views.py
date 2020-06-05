@@ -1,4 +1,5 @@
 from django.urls import reverse
+from knox.models import AuthToken
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -6,6 +7,20 @@ from accounts.models import Farmer
 
 
 class AccountViewTestCase(APITestCase):
+    def setUp(self):
+        self.user = Farmer.objects.create_farmer(
+            email="davinci@gmail.com",
+            phone_number="08075985865",
+            business_name="Davinci Foods",
+            password="Some_very_strong_password",
+            location="Oyo"
+        )
+        self.token = AuthToken.objects.create(self.user)[1]
+        self.api_aunthenticate()
+
+    def api_aunthenticate(self):
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
+
     def test_welcome(self):
         url = reverse('welcome')
         response = self.client.get(url)
@@ -24,6 +39,7 @@ class AccountViewTestCase(APITestCase):
             "password": "some_strong_password",
             "business_name": "Test Case",
             "phone_number": "1234567899",
+            "location": "Oyo",
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -35,6 +51,7 @@ class AccountViewTestCase(APITestCase):
             "password": "some_strong_password",
             "business_name": "Test Case",
             "phone_number": "1234567899",
+            "location": "Oyo",
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -47,6 +64,7 @@ class AccountViewTestCase(APITestCase):
             "first_name": "Test Case",
             "last_name": "Test Case",
             "phone_number": "1234567899",
+            "location": "Oyo",
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -59,6 +77,7 @@ class AccountViewTestCase(APITestCase):
             "first_name": "Test Case",
             "last_name": "Test Case",
             "phone_number": "1234567899",
+            "location": "Oyo",
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -68,7 +87,8 @@ class AccountViewTestCase(APITestCase):
             email="davin@gmail.com",
             phone_number="08075985865",
             business_name="Davinci 007 Foods",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
         url = reverse('login')
         data = {
@@ -77,3 +97,8 @@ class AccountViewTestCase(APITestCase):
         }
         response = self.client.post(url, data)
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
+
+    def test_get_user(self):
+        url = reverse('user')
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, status.HTTP_200_OK)

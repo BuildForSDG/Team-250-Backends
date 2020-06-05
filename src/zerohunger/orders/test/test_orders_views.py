@@ -18,7 +18,8 @@ class OrderViewsTestCase(APITestCase):
             email="davinci008@gmail.com",
             phone_number="08075985865",
             business_name="Davinci Foods",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
         self.produce1 = Produce.objects.create(
             name='Nigerian Rice',
@@ -43,7 +44,8 @@ class OrderViewsTestCase(APITestCase):
             phone_number="08075985865",
             first_name="User",
             last_name="Two",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
         self.token = AuthToken.objects.create(self.user)[1]
         self.api_aunthenticate()
@@ -137,7 +139,8 @@ class OrderViewsTestCase(APITestCase):
             phone_number="08075985865",
             first_name="User",
             last_name="Two",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
         token = AuthToken.objects.create(user)[1]
         self.user = user

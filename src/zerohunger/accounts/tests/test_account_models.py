@@ -9,7 +9,8 @@ class AccountModelsTestCase(APITestCase):
             email="davinci0072@gmail.com",
             phone_number="08075985865",
             business_name="Davinci 007 Foods",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
         self.assertEquals(str(farmer), 'davinci0072@gmail.com')
 
@@ -19,7 +20,8 @@ class AccountModelsTestCase(APITestCase):
             phone_number="08075985865",
             first_name="Davinci 007 Foods",
             last_name="Davinci 007 Foods",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
         self.assertEquals(str(customer), 'davinci0073@gmail.com')
 

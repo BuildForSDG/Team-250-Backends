@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, status
 from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 import cloudinary.uploader
 
@@ -12,15 +13,8 @@ from .serializers import ProduceListSerializer, ProduceEditSerializer
 
 class ProduceAPI(generics.ListAPIView):
     queryset = Produce.objects.all()
+    pagination_class = PageNumberPagination
     serializer_class = ProduceListSerializer
-
-    def get(self, request):
-        produce = self.get_queryset()
-
-        return Response({
-            'message': 'success',
-            'products': ProduceListSerializer(produce, many=True).data
-        })
 
 
 class AddProductAPI(generics.CreateAPIView):

@@ -10,6 +10,7 @@ class FarmerManager(BaseUserManager):
         email,
         phone_number,
         business_name,
+        location,
         password=None
     ):
         if email is None:
@@ -19,6 +20,7 @@ class FarmerManager(BaseUserManager):
             email=self.normalize_email(email),
             phone_number=phone_number,
             business_name=business_name,
+            location=location,
             isFarmer=True
         )
         farmer.set_password(password)
@@ -33,6 +35,7 @@ class CustomerManager(BaseUserManager):
         phone_number,
         first_name,
         last_name,
+        location,
         password=None
     ):
         if email is None:
@@ -42,7 +45,10 @@ class CustomerManager(BaseUserManager):
             email=self.normalize_email(email),
             phone_number=phone_number,
             first_name=first_name,
-            last_name=last_name)
+            last_name=last_name,
+            location=location
+            )
+
         customer.set_password(password)
         customer.save()
         return customer
@@ -53,7 +59,11 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     phone_number = models.CharField(_("Phone Number"), max_length=15)
     isFarmer = models.BooleanField(default=False)
-
+    location = models.CharField(
+        _("Location"), 
+        max_length=20, 
+        default='Lagos'
+    )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['phone_number', ]
 

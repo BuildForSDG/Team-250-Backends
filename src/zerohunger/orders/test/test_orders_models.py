@@ -11,7 +11,8 @@ class OrderModelTestCase(APITestCase):
             phone_number="08075985865",
             first_name="User",
             last_name="Two",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
 
     def test_orders_model(self):
