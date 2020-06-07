@@ -1,6 +1,11 @@
 from django.urls import path
 from .views import (
-    ProduceAPI, AddProductAPI, ProduceDetailsAPI, ProduceEditDelete)
+    ProduceAPI,
+    AddProductAPI,
+    ProduceDetailsAPI,
+    ProduceEditDelete,
+    ProduceSearchAPI
+)
 
 urlpatterns = [
     path('api/products', ProduceAPI.as_view(), name='products'),
@@ -8,5 +13,6 @@ urlpatterns = [
     path('api/products/<int:id>',
          ProduceDetailsAPI.as_view(), name='detail-product'),
     path('api/products/details/<int:id>',
-         ProduceEditDelete.as_view(), name='product-edit-delete')
+         ProduceEditDelete.as_view(), name='product-edit-delete'),
+    path('api/products/filter', ProduceSearchAPI.as_view(), name='search')
 ]

@@ -327,3 +327,8 @@ class ProductTestCase(APITestCase):
 
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_filters(self):
+        url = '/api/products/filter?search=nigerian'
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, status.HTTP_200_OK)

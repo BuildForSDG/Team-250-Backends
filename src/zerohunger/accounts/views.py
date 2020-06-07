@@ -1,11 +1,14 @@
-from django.shortcuts import get_object_or_404
 from knox.models import AuthToken
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 from .models import User
-from .serializers import CustomerSerializer, FarmerSerializer, LoginSerializer,  UserSerializer
+from .serializers import (
+    CustomerSerializer,
+    FarmerSerializer,
+    LoginSerializer,
+    UserSerializer)
 
 
 @api_view(['GET'])
@@ -73,18 +76,10 @@ class UserLogin(generics.CreateAPIView):
 
 # GET Users API
 class GetUserAPI(generics.RetrieveAPIView):
-  permission_classes = [
-    permissions.IsAuthenticated,
-  ]
-  serializer_class = UserSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    serializer_class = UserSerializer
 
-  def get_object(self):
-    return self.request.user
-
-
-# class SetPassword(generics.UpdateAPIView):
-#     serializer_class = UserSerializer
-
-#     def put(self, request):
-#         email = request.data['email']
-#         user = get_object_or_404(User, email=email)
+    def get_object(self):
+        return self.request.user

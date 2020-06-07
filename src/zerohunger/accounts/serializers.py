@@ -68,8 +68,8 @@ class LoginSerializer(serializers.Serializer):
 
         try:
             userObj = Farmer.objects.get(email=user.email)
-        except Farmer.DoesNotExist:  # pragma: no cover 
-            userObj = None 
+        except Farmer.DoesNotExist:  # pragma: no cover
+            userObj = None
         try:  # pragma: no cover
             if userObj is None:
                 userObj = Customer.objects.get(

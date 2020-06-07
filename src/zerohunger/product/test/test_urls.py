@@ -6,7 +6,8 @@ from product.views import (
     ProduceAPI,
     AddProductAPI,
     ProduceDetailsAPI,
-    ProduceEditDelete
+    ProduceEditDelete,
+    ProduceSearchAPI
 )
 
 
@@ -26,3 +27,7 @@ class TestProduceUrlsCase(APITestCase):
     def test_produce_edit_delete_resolves(self):
         url = reverse('product-edit-delete', args=['1'])
         self.assertEquals(resolve(url).func.view_class, ProduceEditDelete)
+
+    def test_produce_filter_resolves(self):
+        url = reverse('search')
+        self.assertEquals(resolve(url).func.view_class, ProduceSearchAPI)

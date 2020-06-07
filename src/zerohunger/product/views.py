@@ -1,3 +1,4 @@
+from rest_framework import filters
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, status
 from rest_framework.parsers import JSONParser, MultiPartParser
@@ -117,3 +118,10 @@ class ProduceEditDelete(generics.RetrieveUpdateDestroyAPIView):
         product = self.get_object(id)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ProduceSearchAPI(generics.ListAPIView):
+    queryset = Produce.objects.all()
+    serializer_class = ProduceListSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'farmer_id__location']

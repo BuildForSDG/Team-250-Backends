@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import CustomerRegView, UserLogin, FarmerRegView, welcome, GetUserAPI
+from .views import (
+    CustomerRegView, UserLogin, FarmerRegView, welcome, GetUserAPI)
 from knox import views as knox_views
 
 

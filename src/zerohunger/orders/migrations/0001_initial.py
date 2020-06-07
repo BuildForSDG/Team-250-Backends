@@ -18,33 +18,92 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ItemsOrdered',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.IntegerField()),
-                ('dateTimeCreated', models.DateField(auto_now_add=True)),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID')
+                ),
+                (
+                    'quantity',
+                    models.IntegerField()),
+                (
+                    'dateTimeCreated',
+                    models.DateField(auto_now_add=True)
+                ),
             ],
         ),
         migrations.CreateModel(
             name='Orders',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount_paid', models.FloatField(blank=True, null=True)),
-                ('order_status', models.CharField(choices=[('P', 'Proccesing'), ('T', 'In-Transit'), ('C', 'Canceled'), ('D', 'Delivered')], default='P', max_length=1)),
-                ('dateAndTimeOfOrder', models.DateTimeField(auto_now_add=True)),
-                ('amount_due', models.FloatField(blank=True, null=True)),
-                ('has_paid', models.BooleanField(default=False)),
-                ('create_date', models.DateTimeField(auto_now_add=True)),
-                ('customer_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='customers', to=settings.AUTH_USER_MODEL)),
-                ('items_ordered', models.ManyToManyField(through='orders.ItemsOrdered', to='product.Produce')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID')
+                ),
+                (
+                    'amount_paid',
+                    models.FloatField(
+                        blank=True,
+                        null=True)),
+                (
+                    'order_status',
+                    models.CharField(
+                        choices=[(
+                            'P', 'Proccesing'),
+                            ('T', 'In-Transit'),
+                            ('C', 'Canceled'),
+                            ('D', 'Delivered')],
+                        default='P', max_length=1)
+                ),
+                (
+                    'dateAndTimeOfOrder',
+                    models.DateTimeField(
+                        auto_now_add=True)),
+                (
+                    'amount_due',
+                    models.FloatField(
+                        blank=True, null=True)),
+                (
+                    'has_paid',
+                    models.BooleanField(
+                        default=False)),
+                (
+                    'create_date',
+                    models.DateTimeField(
+                        auto_now_add=True)),
+                (
+                    'customer_id',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='customers',
+                        to=settings.AUTH_USER_MODEL)),
+                (
+                    'items_ordered',
+                    models.ManyToManyField(
+                        through='orders.ItemsOrdered',
+                        to='product.Produce')
+                ),
             ],
         ),
         migrations.AddField(
             model_name='itemsordered',
             name='orders',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='orders.Orders'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to='orders.Orders'),
         ),
         migrations.AddField(
             model_name='itemsordered',
             name='produce',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='produce', to='product.Produce'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='produce',
+                to='product.Produce'),
         ),
     ]

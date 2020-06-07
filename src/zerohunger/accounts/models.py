@@ -60,8 +60,8 @@ class User(AbstractUser):
     phone_number = models.CharField(_("Phone Number"), max_length=15)
     isFarmer = models.BooleanField(default=False)
     location = models.CharField(
-        _("Location"), 
-        max_length=20, 
+        _("Location"),
+        max_length=20,
         default='Lagos'
     )
     USERNAME_FIELD = 'email'
