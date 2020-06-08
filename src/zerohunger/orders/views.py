@@ -20,6 +20,7 @@ class OrderAPI(generics.ListCreateAPIView):
     def post(self, request):
         customer_id = request.user
         items_ordered = request.data['items']
+        amount_paid = request.data['amountPaid']
         amount_due = 0
         for item in items_ordered:
             produce = Produce.objects.get(id=item['produceId'])
@@ -30,10 +31,14 @@ class OrderAPI(generics.ListCreateAPIView):
             produce.quantity -= item['quantity']
             produce.save()
             amount_due += produce.price * item['quantity']
-
+        if amount_paid < amount_due:
+            return Response({
+                'message': 'Amount paid is lower than total of menu purchased '
+            }, status=status.HTTP_400_BAD_REQUEST)
         order = Orders.objects.create(
             customer_id=customer_id,
-            amount_due=amount_due
+            amount_due=amount_due,
+            amount_paid=amount_paid
         )
         for item in items_ordered:
             produce = Produce.objects.get(id=item['produceId'])
@@ -65,4 +70,22 @@ class OrderDetailsAPI(generics.RetrieveAPIView):
         return Response({
             'message': 'success',
             'order': OrderSerializer(order).data
+        })
+
+class OrdersByUserAPI(generics.ListAPIView):
+    queryset = Orders
+    serializer_class = OrderSerializer
+
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsOwner
+    ]
+
+    def get(self, request):
+        user = request.user
+        orders_by_user = Orders.objects.filter(customer_id=user)
+
+        return Response({
+            'message': 'success',
+            'orders': OrderSerializer(orders_by_user, many=True).data
         })

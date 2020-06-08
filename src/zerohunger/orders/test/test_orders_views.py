@@ -51,7 +51,8 @@ class OrderViewsTestCase(APITestCase):
         self.api_aunthenticate()
         self.order = Orders.objects.create(
             customer_id=self.user,
-            amount_due=2500
+            amount_due=2500,
+            amount_paid=3000
         )
         ItemsOrdered.objects.create(
             orders=self.order, produce=self.produce1, quantity=2)
@@ -70,7 +71,8 @@ class OrderViewsTestCase(APITestCase):
                     "quantity": 2,
                     "produceId": 2
                 }
-            ]
+            ],
+            "amountPaid": 190000
         }
         parse_data = json.dumps(data)
         response = self.client.post(
@@ -90,7 +92,8 @@ class OrderViewsTestCase(APITestCase):
                     "quantity": 2,
                     "produceId": 2
                 }
-            ]
+            ],
+            "amountPaid": 10000
         }
         parse_data = json.dumps(data)
         self.client.force_authenticate(user=None)
@@ -111,7 +114,8 @@ class OrderViewsTestCase(APITestCase):
                     "quantity": 2,
                     "produceId": 2
                 }
-            ]
+            ],
+            "amountPaid": 10000
         }
         parse_data = json.dumps(data)
         response = self.client.post(
