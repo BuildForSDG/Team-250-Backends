@@ -1,10 +1,14 @@
 from knox.models import AuthToken
-from rest_framework import generics, status
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 from .models import User
-from .serializers import CustomerSerializer, FarmerSerializer, LoginSerializer
+from .serializers import (
+    CustomerSerializer,
+    FarmerSerializer,
+    LoginSerializer,
+    UserSerializer)
 
 
 @api_view(['GET'])
@@ -28,7 +32,7 @@ class FarmerRegView(generics.CreateAPIView):
         token = AuthToken.objects.create(user)[1]
         return Response({
             "message": "Farmer created succesfully",
-            'farmer': serializer.data,
+            'user': UserSerializer(user).data,
             'token': token
         }, status=status.HTTP_201_CREATED)
 
@@ -47,7 +51,7 @@ class CustomerRegView(generics.CreateAPIView):
         token = AuthToken.objects.create(user)[1]
         return Response({
             "message": "customer created succesfully",
-            'customer': serializer.data,
+            'user': UserSerializer(user).data,
             'token': token
         }, status=status.HTTP_201_CREATED)
 
@@ -65,6 +69,17 @@ class UserLogin(generics.CreateAPIView):
         token = AuthToken.objects.create(user)[1]
         return Response({
             "message": "Login succesfully",
-            'user': serializer.data,
+            'user': UserSerializer(user).data,
             'token': token
         }, status=status.HTTP_201_CREATED)
+
+
+# GET Users API
+class GetUserAPI(generics.RetrieveAPIView):
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return self.request.user

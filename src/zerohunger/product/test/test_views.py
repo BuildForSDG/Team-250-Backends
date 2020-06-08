@@ -20,7 +20,8 @@ class ProductTestCase(APITestCase):
             email="davinci@gmail.com",
             phone_number="08075985865",
             business_name="Davinci Foods",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
         self.token = AuthToken.objects.create(self.user)[1]
         self.api_aunthenticate()
@@ -40,9 +41,9 @@ class ProductTestCase(APITestCase):
     def test_produce_list(self):
         response = self.client.get(self.list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEquals(response.data['message'], 'success')
+
         self.assertEquals(self.produce1.name,
-                          response.data['products'][0]['name'])
+                          response.data['results'][0]['name'])
 
     def test_produce_add(self):
         data = {
@@ -89,7 +90,8 @@ class ProductTestCase(APITestCase):
             phone_number="08075985865",
             first_name="User",
             last_name="Two",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
 
         token = AuthToken.objects.create(user)[1]
@@ -115,7 +117,8 @@ class ProductTestCase(APITestCase):
             phone_number="08075985865",
             first_name="User",
             last_name="Two",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
 
         token = AuthToken.objects.create(user)[1]
@@ -176,7 +179,8 @@ class ProductTestCase(APITestCase):
             email="user2@gmail.com",
             phone_number="08075985865",
             business_name="User",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
         token = AuthToken.objects.create(user)[1]
         self.user = user
@@ -199,7 +203,8 @@ class ProductTestCase(APITestCase):
             phone_number="08075985865",
             first_name="User",
             last_name="Two",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
 
         token = AuthToken.objects.create(user)[1]
@@ -222,7 +227,8 @@ class ProductTestCase(APITestCase):
             phone_number="08075985865",
             first_name="User",
             last_name="Two",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
 
         token = AuthToken.objects.create(user)[1]
@@ -277,7 +283,8 @@ class ProductTestCase(APITestCase):
             email="user2@gmail.com",
             phone_number="08075985865",
             business_name="User",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
 
         token = AuthToken.objects.create(user)[1]
@@ -310,7 +317,8 @@ class ProductTestCase(APITestCase):
             phone_number="08075985865",
             first_name="User",
             last_name="Two",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
 
         token = AuthToken.objects.create(user)[1]
@@ -319,3 +327,8 @@ class ProductTestCase(APITestCase):
 
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_filters(self):
+        url = '/api/products/filter?search=nigerian'
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, status.HTTP_200_OK)

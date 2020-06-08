@@ -22,6 +22,8 @@ class OrderSerializer(serializers.ModelSerializer):
             'id',
             'customer_id',
             'amount_due',
+            'amount_paid',
+            'amount_outstanding',
             'items_ordered',
             'dateAndTimeOfOrder'
         ]

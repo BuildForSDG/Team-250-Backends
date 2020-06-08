@@ -18,6 +18,7 @@ class FarmerSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'email',
+            'location',
             'phone_number',
             'business_name',
             'password'
@@ -39,6 +40,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'email',
+            'location',
             'phone_number',
             'first_name',
             'last_name',
@@ -89,4 +91,4 @@ class LoginSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'phone_number', 'isFarmer']
+        fields = ['id', 'email', 'phone_number', 'location', 'isFarmer']

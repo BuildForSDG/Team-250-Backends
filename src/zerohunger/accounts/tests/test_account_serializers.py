@@ -25,7 +25,8 @@ class TestAccountsSerializer(APITestCase):
             "email": "abbeyunique@gmail.com",
             "phone_number": "09076096533",
             "business_name": "logba",
-            "password": "politicalnonsense"
+            "password": "politicalnonsense",
+            "location": "Oyo"
         }
 
         serializer = FarmerSerializer(data=data)
@@ -50,7 +51,8 @@ class TestAccountsSerializer(APITestCase):
             "phone_number": "09076096533",
             "first_name": "logba",
             "last_name": "logba",
-            "password": "politicalnonsense"
+            "password": "politicalnonsense",
+            "location": "Oyo"
         }
 
         serializer = CustomerSerializer(data=data)
@@ -74,14 +76,16 @@ class TestAccountsSerializer(APITestCase):
             "email": "dummy@test.com",
             "phone_number": "0405894578",
             "password": "oluwanisola",
-            "business_name": "Lade Foods"
+            "business_name": "Lade Foods",
+            "location": "Oyo"
         }
         user_two = Customer.objects.create_customer(
             email='baba@test.com',
             first_name=user_data['business_name'],
             last_name=user_data['business_name'],
             password=user_data['password'],
-            phone_number=user_data['phone_number']
+            phone_number=user_data['phone_number'],
+            location=user_data['location']
         )
         user_two.is_active = False
         user_two.save()
@@ -90,7 +94,8 @@ class TestAccountsSerializer(APITestCase):
             email=user_data['email'],
             business_name=user_data['business_name'],
             password=user_data['password'],
-            phone_number=user_data['phone_number']
+            phone_number=user_data['phone_number'],
+            location=user_data['location']
         )
         valid_data = {
             "email": "dummy@test.com",

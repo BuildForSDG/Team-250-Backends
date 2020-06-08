@@ -9,7 +9,8 @@ class TestProductSerializer(APITestCase):
             email="davinci@gmail.com",
             phone_number="08075985865",
             business_name="Davinci Foods",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
 
     def test_valid_product_serializers(self):

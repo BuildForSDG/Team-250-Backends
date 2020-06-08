@@ -52,6 +52,9 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.MultiPartParser',
         'rest_framework.parsers.FormParser'
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination'
+    '.PageNumberPagination',
+    'PAGE_SIZE': 20
 }
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -92,7 +95,8 @@ AUTH_USER_MODEL = 'accounts.User'
 DATABASES = {}
 
 DATABASES['default'] = dj_database_url.config(
-    default=os.getenv('DATABASE_URL'))
+    default=os.getenv('DATABASE_URL'), ssl_require=True)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

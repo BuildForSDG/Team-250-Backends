@@ -25,6 +25,8 @@ class OrdersTestCase(APITestCase):
             "amount_due": 2000,
             "items_ordered": [{'produce': 1, 'quantity': 3}],
             "dateAndTimeOfOrder": "2020-06-01T19:05:01.284988Z",
+            "amount_paid": 4000,
+            "amount_outstanding": -2000
         }
         serializer = OrderSerializer(data=data)
         self.assertTrue(serializer.is_valid())

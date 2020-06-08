@@ -18,7 +18,8 @@ class OrderViewsTestCase(APITestCase):
             email="davinci008@gmail.com",
             phone_number="08075985865",
             business_name="Davinci Foods",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
         self.produce1 = Produce.objects.create(
             name='Nigerian Rice',
@@ -43,13 +44,15 @@ class OrderViewsTestCase(APITestCase):
             phone_number="08075985865",
             first_name="User",
             last_name="Two",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
         self.token = AuthToken.objects.create(self.user)[1]
         self.api_aunthenticate()
         self.order = Orders.objects.create(
             customer_id=self.user,
-            amount_due=2500
+            amount_due=2500,
+            amount_paid=3000
         )
         ItemsOrdered.objects.create(
             orders=self.order, produce=self.produce1, quantity=2)
@@ -68,7 +71,8 @@ class OrderViewsTestCase(APITestCase):
                     "quantity": 2,
                     "produceId": 2
                 }
-            ]
+            ],
+            "amountPaid": 190000
         }
         parse_data = json.dumps(data)
         response = self.client.post(
@@ -88,7 +92,8 @@ class OrderViewsTestCase(APITestCase):
                     "quantity": 2,
                     "produceId": 2
                 }
-            ]
+            ],
+            "amountPaid": 10000
         }
         parse_data = json.dumps(data)
         self.client.force_authenticate(user=None)
@@ -109,7 +114,8 @@ class OrderViewsTestCase(APITestCase):
                     "quantity": 2,
                     "produceId": 2
                 }
-            ]
+            ],
+            "amountPaid": 10000
         }
         parse_data = json.dumps(data)
         response = self.client.post(
@@ -137,7 +143,8 @@ class OrderViewsTestCase(APITestCase):
             phone_number="08075985865",
             first_name="User",
             last_name="Two",
-            password="Some_very_strong_password"
+            password="Some_very_strong_password",
+            location="Oyo"
         )
         token = AuthToken.objects.create(user)[1]
         self.user = user

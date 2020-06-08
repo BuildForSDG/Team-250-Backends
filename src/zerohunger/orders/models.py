@@ -14,10 +14,10 @@ class Orders(models.Model):
     )
     customer_id = models.ForeignKey(
         User, related_name='customers', on_delete=models.CASCADE)
-    amount_paid = models.FloatField(blank=True, null=True)
+    amount_paid = models.FloatField()
     order_status = models.CharField(max_length=1, choices=CHOICES, default='P')
     dateAndTimeOfOrder = models.DateTimeField(auto_now_add=True)
-    amount_due = models.FloatField(blank=True, null=True)
+    amount_due = models.FloatField()
     has_paid = models.BooleanField(default=False)
     items_ordered = models.ManyToManyField(
         Produce, through='ItemsOrdered')
