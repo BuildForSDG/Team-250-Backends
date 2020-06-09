@@ -91,4 +91,12 @@ class LoginSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'phone_number', 'location', 'isFarmer']
+        fields = [
+            'id', 
+            'email', 
+            'phone_number', 
+            'location', 
+            'isFarmer', 
+            'first_name', 
+            'last_name'
+            ]

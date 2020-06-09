@@ -1,7 +1,14 @@
+import os
+
+from django.template import loader
+from django.core.mail import EmailMessage, send_mail
+
 from knox.models import AuthToken
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+
+from zerohunger.settings import EMAIL_HOST_USER
 
 from .models import User
 from .serializers import (
@@ -10,6 +17,21 @@ from .serializers import (
     LoginSerializer,
     UserSerializer)
 
+
+def send_email(user):
+    directory_path = os.path.dirname(__file__)
+    file_path = os.path.join(directory_path, 'templates/welcome.html')
+    html_message = loader.render_to_string(
+            file_path,
+            {
+                'last_name': user.last_name or user.business_name,
+                'subject':  'Thank you from Zerohunger',
+            }
+        )
+    subject = 'Welcome to Zerohunger'
+    body = "Welcome to Zerohunger"
+    recipient = [user.email]
+    send_mail(subject, body, EMAIL_HOST_USER, recipient, fail_silently = False, html_message=html_message)
 
 @api_view(['GET'])
 def welcome(request):
@@ -30,9 +52,11 @@ class FarmerRegView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         token = AuthToken.objects.create(user)[1]
+        send_email(user)
         return Response({
             "message": "Farmer created succesfully",
             'user': UserSerializer(user).data,
+            'business_name': user.business_name,
             'token': token
         }, status=status.HTTP_201_CREATED)
 
@@ -49,6 +73,8 @@ class CustomerRegView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         token = AuthToken.objects.create(user)[1]
+        
+        send_email(user)
         return Response({
             "message": "customer created succesfully",
             'user': UserSerializer(user).data,
