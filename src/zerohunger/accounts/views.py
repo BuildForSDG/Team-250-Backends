@@ -7,6 +7,7 @@ from knox.models import AuthToken
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from django.shortcuts import get_object_or_404
 
 from zerohunger.settings import EMAIL_HOST_USER
 
@@ -48,11 +49,13 @@ class FarmerRegView(generics.CreateAPIView):
         post:
         Create a new Farmer.
         """
+        
         serializer = self.serializer_class(data=request.data)
+
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         token = AuthToken.objects.create(user)[1]
-        send_email(user)
+        # send_email(user)
         return Response({
             "message": "Farmer created succesfully",
             'user': UserSerializer(user).data,
@@ -69,12 +72,13 @@ class CustomerRegView(generics.CreateAPIView):
         post:
         Create a new Customer.
         """
+        
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         token = AuthToken.objects.create(user)[1]
         
-        send_email(user)
+        # send_email(user)
         return Response({
             "message": "customer created succesfully",
             'user': UserSerializer(user).data,
