@@ -1,13 +1,12 @@
 import os
 
 from django.template import loader
-from django.core.mail import EmailMessage, send_mail
+from django.core.mail import send_mail
 
 from knox.models import AuthToken
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from django.shortcuts import get_object_or_404
 
 from zerohunger.settings import EMAIL_HOST_USER
 
@@ -23,16 +22,18 @@ def send_email(user):
     directory_path = os.path.dirname(__file__)
     file_path = os.path.join(directory_path, 'templates/welcome.html')
     html_message = loader.render_to_string(
-            file_path,
-            {
-                'last_name': user.last_name or user.business_name,
-                'subject':  'Thank you from Zerohunger',
-            }
-        )
+        file_path,
+        {
+            'last_name': user.last_name or user.business_name,
+            'subject':  'Thank you from Zerohunger',
+        }
+    )
     subject = 'Welcome to Zerohunger'
     body = "Welcome to Zerohunger"
     recipient = [user.email]
-    send_mail(subject, body, EMAIL_HOST_USER, recipient, fail_silently = False, html_message=html_message)
+    send_mail(subject, body, EMAIL_HOST_USER, recipient,
+              fail_silently=False, html_message=html_message)
+
 
 @api_view(['GET'])
 def welcome(request):
@@ -49,7 +50,7 @@ class FarmerRegView(generics.CreateAPIView):
         post:
         Create a new Farmer.
         """
-        
+
         serializer = self.serializer_class(data=request.data)
 
         serializer.is_valid(raise_exception=True)
@@ -72,12 +73,12 @@ class CustomerRegView(generics.CreateAPIView):
         post:
         Create a new Customer.
         """
-        
+
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         token = AuthToken.objects.create(user)[1]
-        
+
         # send_email(user)
         return Response({
             "message": "customer created succesfully",
